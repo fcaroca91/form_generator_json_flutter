@@ -9,6 +9,10 @@ class HomeStyles with Sizes {
 
   TextStyle forgetButtonTitle;
 
+  TextStyle textFormField;
+
+  TextStyle linkText;
+
   HomeStyles(BuildContext context) {
     setDefaultSize(context);
 
@@ -26,6 +30,16 @@ class HomeStyles with Sizes {
       fontSize: super.sizeP(16),
       //height: sizeH(0.5),
       fontWeight: FontWeight.w600,
+    );
+
+    textFormField = TextStyle(
+      color: Color(0xff363636),
+      fontSize: sizeH(16),
+    );
+
+    linkText = TextStyle(
+      color: Color(0xff36df94),
+      fontSize: sizeH(12),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:challenge_wolf/core/models/custom_requirement_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:provider/provider.dart';
 
@@ -7,42 +8,48 @@ import 'package:challenge_wolf/core/viewmodels/custom_requirements_repository.da
 
 import 'package:challenge_wolf/ui/screens/home_components.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget with HomeComponents {
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  final List<CustomRequirement> a = [];
 
-class _HomePageState extends State<HomePage> with HomeComponents {
-  @override
   Widget build(BuildContext context) {
-    initHomeComponents(context);
-
     final customRequirementsRepository =
         Provider.of<CustomRequirementsRepository>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Lista de Usuarios'),
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
       ),
-      body: Align(
-        alignment: Alignment.center,
-        child: FutureBuilder(
-          future: customRequirementsRepository.fetchCustomRequirements(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Text("ERROR");
-            List<CustomRequirement> data = snapshot.data;
-
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: <Widget>[
-                    Text(data[index].question),
-                  ],
-                );
+      body: FutureProvider(
+        initialData: a,
+        create: (_) async =>
+            await customRequirementsRepository.fetchCustomRequirements(),
+        child: Consumer(
+          builder: (context, List<CustomRequirement> data, _) {
+            initHomeComponents(context);
+            return GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(FocusNode());
               },
+              child: FormBuilder(
+                key: _fbKey,
+                autovalidate: false,
+                readOnly: false,
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: styles.sizeW(360),
+                    height: styles.sizeH(663),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: homeComponents(data),
+                    ),
+                  ),
+                ),
+              ),
             );
           },
         ),
@@ -50,27 +57,3 @@ class _HomePageState extends State<HomePage> with HomeComponents {
     );
   }
 }
-
-/* return Scaffold(
-      appBar: AppBar(
-        title: Text('Lista de Usuarios'),
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-      ),
-      body: Align(
-        alignment: Alignment.center,
-        child: Container(
-            width: styles.sizeW(180),
-            height: styles.sizeH(400),
-            color: Colors.blueGrey,
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                buttonTitleChoice("forget"),
-                ButtonComponent(),
-              ],
-            ),
-            ),
-      ),
-    ); */
