@@ -1,5 +1,6 @@
 import 'package:challenge_wolf/ui/screens/home_styles.dart';
-import 'package:challenge_wolf/ui/widgets/save_button_widget.dart';
+
+import 'package:challenge_wolf/ui/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -54,11 +55,14 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
       ),
     );
 
+    final EdgeInsets margin = EdgeInsets.only(bottom: styles.sizeH(15),);
+
     switch (customRequirement.fieldType) {
       case "Freetext":
         return Container(
           width: width,
           height: height,
+          margin: margin,
           child: FormBuilderTextField(
             attribute: "textInput",
             decoration: inputDecoration,
@@ -77,6 +81,7 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
         return Container(
           width: width,
           height: height,
+          margin: margin,
           child: FormBuilderTextField(
             attribute: "integerInput",
             decoration: inputDecoration,
@@ -97,6 +102,7 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
         return Container(
           width: width,
           height: height,
+          margin: margin,
           child: FormBuilderDropdown(
             attribute: "dropDown",
             decoration: inputDecoration,
@@ -147,7 +153,7 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
         );
         break;
       default:
-        return SaveButton(
+        return FilePickerButton(
           label: labelText,
           description: description,
           width: width,
@@ -158,7 +164,7 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
               type: FileType.custom,
               allowedExtensions: ['pdf'],
             );
-            onChanged("WENA:  " + path);
+            onChanged("WENA:  " + path ?? "");
           },
         );
         break;

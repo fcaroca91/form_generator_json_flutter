@@ -1,4 +1,5 @@
 import 'package:challenge_wolf/core/models/custom_requirement_model.dart';
+import 'package:challenge_wolf/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -20,7 +21,8 @@ class HomePage extends StatelessWidget with HomeComponents {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Lista de Usuarios'),
+        title: Text('Challenge Wolf'),
+        centerTitle: true,
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
       ),
@@ -41,8 +43,13 @@ class HomePage extends StatelessWidget with HomeComponents {
                 readOnly: false,
                 child: SingleChildScrollView(
                   child: Container(
+                    padding: EdgeInsets.only(
+                      top: styles.sizeH(20),
+                    ),
                     width: styles.sizeW(360),
-                    height: styles.sizeH(663),
+                    constraints: BoxConstraints(
+                      minHeight: styles.sizeH(663),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: homeComponents(data),
@@ -53,6 +60,9 @@ class HomePage extends StatelessWidget with HomeComponents {
             );
           },
         ),
+      ),
+      floatingActionButton: SaveButton(
+        onPressed: null,
       ),
     );
   }

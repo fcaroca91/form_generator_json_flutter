@@ -1,4 +1,5 @@
 import 'package:challenge_wolf/core/models/custom_requirement_model.dart';
+import 'package:challenge_wolf/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:challenge_wolf/ui/screens/home_styles.dart';
 import 'package:challenge_wolf/ui/screens/json_custom_requirements_components.dart';
