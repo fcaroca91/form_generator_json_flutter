@@ -1,4 +1,5 @@
 import 'package:challenge_wolf/ui/screens/home_styles.dart';
+import 'package:challenge_wolf/ui/widgets/url_launch_html.dart';
 
 import 'package:challenge_wolf/ui/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
@@ -31,22 +32,25 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
 
     final String description = customRequirement.description;
 
+    final String attribute = customRequirement.customRequirementId.toString();
+
     final double width = styles.sizeW(300);
     final double height = styles.sizeW(70);
 
     final InputDecoration inputDecoration = InputDecoration(
       labelText: labelText,
       labelStyle: styles.textFormField,
-      helperText: description,
-      errorStyle: TextStyle(
+      helperText: "",
+      //helperText: description,
+      /* errorStyle: TextStyle(
         color: Colors.red,
         fontSize: styles.sizeH(10.0),
-      ),
+      ), */
       contentPadding: EdgeInsets.fromLTRB(
         styles.sizeW(20),
         styles.sizeH(15),
         styles.sizeW(20),
-        styles.sizeH(15),
+        styles.sizeH(0),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(
@@ -55,26 +59,39 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
       ),
     );
 
-    final EdgeInsets margin = EdgeInsets.only(bottom: styles.sizeH(15),);
+    final EdgeInsets margin = EdgeInsets.only(
+      top: styles.sizeH(20),
+      bottom: styles.sizeH(0),
+    );
+
+    String helperText = description;
 
     switch (customRequirement.fieldType) {
       case "Freetext":
-        return Container(
-          width: width,
-          height: height,
-          margin: margin,
-          child: FormBuilderTextField(
-            attribute: "textInput",
-            decoration: inputDecoration,
-            onChanged: (v) => onChanged(v),
-            validators: [
-              FormBuilderValidators.requiredTrue(
-                errorText: "Cant empty TextInput",
+        return Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              width: width,
+              height: height,
+              margin: margin,
+              child: FormBuilderTextField(
+                attribute: attribute,
+                decoration: inputDecoration,
+                validators: [
+                  FormBuilderValidators.required(),
+                ],
+                keyboardType: TextInputType.text,
               ),
-              FormBuilderValidators.max(70),
-            ],
-            keyboardType: TextInputType.text,
-          ),
+            ),
+            Positioned(
+              top: styles.sizeH(68),
+              child: UrlLaunchHtml(
+                description: description,
+                styles: styles,
+              ),
+            )
+          ],
         );
         break;
       case "Integer":
@@ -83,16 +100,12 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
           height: height,
           margin: margin,
           child: FormBuilderTextField(
-            attribute: "integerInput",
+            attribute: attribute,
             decoration: inputDecoration,
-            onChanged: (v) => onChanged(v),
             valueTransformer: (text) => num.tryParse(text),
             validators: [
-              FormBuilderValidators.requiredTrue(
-                errorText: "Cant empty IntergetInput",
-              ),
+              FormBuilderValidators.required(),
               FormBuilderValidators.numeric(),
-              FormBuilderValidators.max(10),
             ],
             keyboardType: TextInputType.number,
           ),
@@ -104,15 +117,12 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
           height: height,
           margin: margin,
           child: FormBuilderDropdown(
-            attribute: "dropDown",
+            attribute: attribute,
             decoration: inputDecoration,
             hint: Text('Select Value'),
             validators: [
-              FormBuilderValidators.requiredTrue(
-                errorText: "Select any options DropDown",
-              ),
+              FormBuilderValidators.required(),
             ],
-            onChanged: (v) => onChanged(v),
             items: customRequirement.options
                 .map((value) => DropdownMenuItem(
                       value: value,
@@ -123,49 +133,42 @@ class JsonCustomRequirementsComponents extends StatelessWidget {
         );
         break;
       case "Checkbox":
-        return FormBuilderCheckbox(
-          attribute: 'checkBox',
-          decoration: inputDecoration,
-          initialValue: false,
-          onChanged: (v) => onChanged(v),
-          leadingInput: true,
-          label: RichText(
-            text: TextSpan(
-              children: customRequirement.options
-                  .map(
-                    (v) => TextSpan(
-                      text: v,
-                      style: TextStyle(color: Colors.blue),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          print("launch url");
-                        },
-                    ),
-                  )
-                  .toList(),
-            ),
+        return Container(
+          width: width,
+          margin: EdgeInsets.only(bottom: styles.sizeH(25)),
+          child: FormBuilderCheckboxList(
+            attribute: 'checkBox',
+            decoration: inputDecoration,
+            //initialValue: false,
+            leadingInput: true,
+            options: customRequirement.options
+                .map(
+                  (v) => FormBuilderFieldOption(
+                    value: v,
+                  ),
+                )
+                .toList(),
+            validators: [
+              FormBuilderValidators.required(),
+            ],
           ),
-          validators: [
-            FormBuilderValidators.requiredTrue(
-              errorText: "You must accept terms and conditions to continue",
-            ),
-          ],
         );
         break;
       default:
         return FilePickerButton(
-          label: labelText,
+          label: 'Select file to save',
           description: description,
           width: width,
           heigth: height,
           styles: styles,
-          onPressed: () async {
+          decoration: inputDecoration,
+          /* onTap: () async {
             String path = await FilePicker.getFilePath(
               type: FileType.custom,
               allowedExtensions: ['pdf'],
             );
-            onChanged("WENA:  " + path ?? "");
-          },
+            onChanged("WENA:  ${path ?? 'No seleccionaste nada'}");
+          }, */
         );
         break;
     }

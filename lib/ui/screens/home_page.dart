@@ -9,9 +9,17 @@ import 'package:challenge_wolf/core/viewmodels/custom_requirements_repository.da
 
 import 'package:challenge_wolf/ui/screens/home_components.dart';
 
-class HomePage extends StatelessWidget with HomeComponents {
+class HomePage extends StatefulWidget  {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with HomeComponents{
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+
   final List<CustomRequirement> a = [];
+
+  bool autoValidation = false;
 
   Widget build(BuildContext context) {
     final customRequirementsRepository =
@@ -39,7 +47,7 @@ class HomePage extends StatelessWidget with HomeComponents {
               },
               child: FormBuilder(
                 key: _fbKey,
-                autovalidate: false,
+                autovalidate: autoValidation,
                 readOnly: false,
                 child: SingleChildScrollView(
                   child: Container(
@@ -62,7 +70,17 @@ class HomePage extends StatelessWidget with HomeComponents {
         ),
       ),
       floatingActionButton: SaveButton(
-        onPressed: null,
+        onPressed: () {
+          if (_fbKey.currentState.saveAndValidate()) {
+            print(_fbKey.currentState.value);
+          } else {
+            setState(() {
+              autoValidation = true;
+            });
+            print(_fbKey.currentState.value);
+            print("validation failed");
+          }
+        },
       ),
     );
   }
