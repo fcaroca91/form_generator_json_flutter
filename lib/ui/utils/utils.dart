@@ -1,2 +1,2 @@
 export 'package:challenge_wolf/ui/utils/sizes.dart';
-export 'package:challenge_wolf/ui/utils/url_verification.dart';
+export 'package:challenge_wolf/ui/utils/utils_regex.dart';

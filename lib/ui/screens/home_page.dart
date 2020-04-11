@@ -9,12 +9,12 @@ import 'package:challenge_wolf/core/viewmodels/custom_requirements_repository.da
 
 import 'package:challenge_wolf/ui/screens/home_components.dart';
 
-class HomePage extends StatefulWidget  {
+class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with HomeComponents{
+class _HomePageState extends State<HomePage> with HomeComponents {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
   final List<CustomRequirement> a = [];
@@ -26,8 +26,8 @@ class _HomePageState extends State<HomePage> with HomeComponents{
         Provider.of<CustomRequirementsRepository>(context);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: true,
+      //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Challenge Wolf'),
         centerTitle: true,

@@ -39,7 +39,7 @@ class HomeStyles with Sizes {
 
     linkText = TextStyle(
       color: Color(0xff36df94),
-      fontSize: sizeH(12),
+      fontSize: sizeH(12), // 13 ios
     );
   }
 }
