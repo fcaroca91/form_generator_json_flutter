@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:challenge_wolf/ui/utils/utils.dart';
+import 'package:flutter/services.dart';
 import 'package:challenge_wolf/core/models/custom_requirement_model.dart';
 import 'package:challenge_wolf/ui/widgets/widgets.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -21,6 +26,24 @@ class _HomePageState extends State<HomePage> with HomeComponents {
 
   bool autoValidation = false;
 
+  final Connectivity _connectivity = Connectivity();
+
+  StreamSubscription<ConnectivityResult> _connectionSubscription;
+
+  bool isOnline = true;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+    _connectionSubscription = _connectivity.onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      await _updateConnectionStatus().then((bool isConnected) => setState(() {
+            isOnline = isConnected;
+          }));
+    });
+  }
+
   Widget build(BuildContext context) {
     final customRequirementsRepository =
         Provider.of<CustomRequirementsRepository>(context);
@@ -34,7 +57,59 @@ class _HomePageState extends State<HomePage> with HomeComponents {
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
       ),
-      body: FutureProvider(
+      body: Builder(builder: (context) {
+        if (isOnline) {
+          return FutureProvider(
+            initialData: a,
+            create: (_) async {
+              print(await DataStoreOffline.extractData());
+              return await customRequirementsRepository
+                  .fetchCustomRequirements();
+            },
+            child: Consumer(
+              builder: (context, List<CustomRequirement> data, _) {
+                initHomeComponents(context);
+                return GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: FormBuilder(
+                    key: _fbKey,
+                    autovalidate: autoValidation,
+                    readOnly: false,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          top: styles.sizeH(20),
+                        ),
+                        width: styles.sizeW(360),
+                        constraints: BoxConstraints(
+                          minHeight: styles.sizeH(663),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: homeComponents(data),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        } else {
+          _fbKey.currentState.save();
+          DataStoreOffline.saveData(_fbKey.currentState.value.toString());
+          return CustomDialog(
+            title: "SIN CONEXIÓN",
+            description:
+                "Te haz quedado sin internet, una vez que se restablezca el acceso a internet, apareceran tus datos cargados",
+            buttonText: "null",
+            styles: styles,
+          );
+        }
+      }),
+      /* FutureProvider(
         initialData: a,
         create: (_) async =>
             await customRequirementsRepository.fetchCustomRequirements(),
@@ -68,7 +143,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
             );
           },
         ),
-      ),
+      ), */
       floatingActionButton: SaveButton(
         onPressed: () {
           if (_fbKey.currentState.saveAndValidate()) {
@@ -83,5 +158,42 @@ class _HomePageState extends State<HomePage> with HomeComponents {
         },
       ),
     );
+  }
+
+  Future<Null> initConnectivity() async {
+    try {
+      await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    await _updateConnectionStatus().then((bool isConnected) => setState(() {
+          isOnline = isConnected;
+        }));
+  }
+
+  Future<bool> _updateConnectionStatus() async {
+    bool isConnected;
+    try {
+      final List<InternetAddress> result =
+          await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isConnected = true;
+      }
+    } on SocketException catch (_) {
+      isConnected = false;
+      return false;
+    }
+    return isConnected;
+  }
+
+  @override
+  void dispose() {
+    _connectionSubscription.cancel();
+    super.dispose();
   }
 }

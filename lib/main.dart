@@ -30,7 +30,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Connectivity _connectivity = Connectivity();
+  /* final Connectivity _connectivity = Connectivity();
 
   StreamSubscription<ConnectivityResult> _connectionSubscription;
 
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
             isOnline = isConnected;
           }));
     });
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +57,25 @@ class _MyAppState extends State<MyApp> {
         )
       ],
       child: MaterialApp(
-        home: Builder(builder: (context) {
+        home: HomePage(),
+        /* Builder(builder: (context) {
           if (isOnline) {
-            return HomePage();
+            return SafeArea(
+              child: HomePage(),
+            );
           } else {
+            DataStoreOffline.saveData("");
             return Container(
               child: Text("ESTAS SIN CONEXION"),
             );
           }
-        }),
+        }), */
         debugShowCheckedModeBanner: false,
       ),
     );
   }
 
-  Future<Null> initConnectivity() async {
+  /* Future<Null> initConnectivity() async {
     try {
       await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
@@ -106,5 +110,5 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     _connectionSubscription.cancel();
     super.dispose();
-  }
+  } */
 }

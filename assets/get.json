@@ -120,6 +120,6 @@
     "units": "ot",
     "required_level": "required",
     "description": "Please login to<a href='www.certificate.com'> this website </a> and prvoide your certificate.",
-    "value": "archivo1.pdf"
+    "value": null
   }
 ]
