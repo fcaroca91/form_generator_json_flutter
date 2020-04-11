@@ -6,7 +6,7 @@
     "units": "ot",
     "required_level": "required",
     "description": "Please login to<a href='www.certificate.com'> this website </a> and prvoide your certificate.",
-    "value": null
+    "value": "yes"
   },
   {
     "custom_requirement_id": 19,
@@ -15,7 +15,7 @@
     "units": "ot",
     "required_level": "required",
     "description": "Please login to<a href='www.certificate.com'> this website </a> and prvoide your certificate.",
-    "value": null
+    "value": 1
   },
   {
     "custom_requirement_id": 12,

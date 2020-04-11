@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:challenge_wolf/ui/utils/utils.dart';
 import 'package:flutter/services.dart';
@@ -32,9 +33,12 @@ class _HomePageState extends State<HomePage> with HomeComponents {
 
   bool isOnline = true;
 
+  var dataPrefs;
+
+  bool setAttributeValue = false;
+
   @override
   void initState() {
-    super.initState();
     initConnectivity();
     _connectionSubscription = _connectivity.onConnectivityChanged
         .listen((ConnectivityResult result) async {
@@ -42,6 +46,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
             isOnline = isConnected;
           }));
     });
+    super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -50,7 +55,6 @@ class _HomePageState extends State<HomePage> with HomeComponents {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Challenge Wolf'),
         centerTitle: true,
@@ -58,49 +62,66 @@ class _HomePageState extends State<HomePage> with HomeComponents {
         automaticallyImplyLeading: false,
       ),
       body: Builder(builder: (context) {
-        if (isOnline) {
-          return FutureProvider(
-            initialData: a,
-            create: (_) async {
-              print(await DataStoreOffline.extractData());
-              return await customRequirementsRepository
-                  .fetchCustomRequirements();
-            },
-            child: Consumer(
-              builder: (context, List<CustomRequirement> data, _) {
-                initHomeComponents(context);
-                return GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                  child: FormBuilder(
-                    key: _fbKey,
-                    autovalidate: autoValidation,
-                    readOnly: false,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          top: styles.sizeH(20),
-                        ),
-                        width: styles.sizeW(360),
-                        constraints: BoxConstraints(
-                          minHeight: styles.sizeH(663),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: homeComponents(data),
-                        ),
+        /* if (isOnline) {
+          setAttributeValue = true; */
+        return FutureProvider(
+          initialData: a,
+          create: (_) async {
+            //////////////////////////////////////////////
+            /* dataPrefs = json.decode(await DataStoreOffline.extractData());
+
+            dataPrefs.forEach((k, v) {
+              _fbKey.currentState.setAttributeValue(k, v);
+            }); */
+
+            return await customRequirementsRepository.fetchCustomRequirements();
+          },
+          child: Consumer(
+            builder: (context, List<CustomRequirement> data, _) {
+              initHomeComponents(context);
+              setAttributeValue = !isOnline;
+              print(dataPrefs);
+              return GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: FormBuilder(
+                  key: _fbKey,
+                  autovalidate: autoValidation,
+                  readOnly: false,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: styles.sizeH(20),
+                      ),
+                      width: styles.sizeW(360),
+                      constraints: BoxConstraints(
+                        minHeight: styles.sizeH(663),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: homeComponents(data),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          );
-        } else {
+                ),
+              );
+            },
+          ),
+        );
+        /* }  else {
           _fbKey.currentState.save();
-          DataStoreOffline.saveData(_fbKey.currentState.value.toString());
-          return CustomDialog(
+          DataStoreOffline.saveData(_fbKey.currentState.value); */
+        /* showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Alert Dialog"),
+                  content: Text("Dialog Content"),
+                );
+              }); */
+
+        /* return CustomDialog(
             title: "SIN CONEXIÓN",
             description:
                 "Te haz quedado sin internet, una vez que se restablezca el acceso a internet, apareceran tus datos cargados",
@@ -108,44 +129,28 @@ class _HomePageState extends State<HomePage> with HomeComponents {
             styles: styles,
           );
         }
+      */
       }),
-      /* FutureProvider(
-        initialData: a,
-        create: (_) async =>
-            await customRequirementsRepository.fetchCustomRequirements(),
-        child: Consumer(
-          builder: (context, List<CustomRequirement> data, _) {
-            initHomeComponents(context);
-            return GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: FormBuilder(
-                key: _fbKey,
-                autovalidate: autoValidation,
-                readOnly: false,
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: styles.sizeH(20),
-                    ),
-                    width: styles.sizeW(360),
-                    constraints: BoxConstraints(
-                      minHeight: styles.sizeH(663),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: homeComponents(data),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ), */
       floatingActionButton: SaveButton(
         onPressed: () {
+          /* showGeneralDialog(
+            context: context,
+            barrierDismissible: true,
+            barrierLabel:
+                MaterialLocalizations.of(context).modalBarrierDismissLabel,
+            barrierColor: Colors.black45,
+            transitionDuration: const Duration(milliseconds: 500),
+            pageBuilder: (BuildContext buildContext, Animation animation,
+                Animation secondaryAnimation) {
+              return CustomDialog(
+                title: "SIN CONEXIÓN",
+                description:
+                    "Te haz quedado sin internet, una vez que se restablezca el acceso a internet, apareceran tus datos cargados",
+                buttonText: "null",
+                styles: styles,
+              );
+            },
+          ); */
           if (_fbKey.currentState.saveAndValidate()) {
             print(_fbKey.currentState.value);
           } else {
@@ -171,9 +176,13 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       return;
     }
 
-    await _updateConnectionStatus().then((bool isConnected) => setState(() {
+    await _updateConnectionStatus().then(
+      (bool isConnected) => setState(
+        () {
           isOnline = isConnected;
-        }));
+        },
+      ),
+    );
   }
 
   Future<bool> _updateConnectionStatus() async {
@@ -183,12 +192,56 @@ class _HomePageState extends State<HomePage> with HomeComponents {
           await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         isConnected = true;
+
+        print("la perra");
+
+        ///
+        dataPrefs = json.decode(await DataStoreOffline.extractData());
+
+        dataPrefs.forEach((k, v) {
+          _fbKey.currentState.setAttributeValue(k, v);
+        });
+
+        //Navigator.of(context, rootNavigator: true).pop('dialog'); Navigator.pop(context);
+      }
+      if (setAttributeValue) {
+        Navigator.of(context, rootNavigator: true).pop();
+        dataPrefs = json.decode(await DataStoreOffline.extractData());
+
+        dataPrefs.forEach((k, v) {
+          _fbKey.currentState.setAttributeValue(k, v);
+        });
       }
     } on SocketException catch (_) {
       isConnected = false;
+
+      _fbKey.currentState.save();
+      await DataStoreOffline.saveData(_fbKey.currentState.value);
+
+      showDialog();
       return false;
     }
     return isConnected;
+  }
+
+  void showDialog() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black45,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return CustomDialog(
+          title: "No Internet Connection",
+          description:
+              "you are left without internet, once internet access is restored, your loaded data will appear",
+          buttonText: "FEipe",
+          styles: styles,
+        );
+      },
+    );
   }
 
   @override

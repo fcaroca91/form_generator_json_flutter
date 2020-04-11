@@ -97,6 +97,9 @@ class _JsonCustomRequirementsComponentsState
               height: height,
               margin: margin,
               child: FormBuilderTextField(
+                controller: TextEditingController(
+                  text: widget.customRequirement.value,
+                ),
                 key: specifyTextFieldKey,
                 attribute: attribute,
                 decoration: inputDecoration,
@@ -143,6 +146,9 @@ class _JsonCustomRequirementsComponentsState
               margin: margin,
               child: FormBuilderTextField(
                 attribute: attribute,
+                controller: TextEditingController(
+                  text: widget.customRequirement.value.toString(),
+                ),
                 decoration: inputDecoration,
                 valueTransformer: (text) => num.tryParse(text),
                 validators: [
@@ -221,7 +227,7 @@ class _JsonCustomRequirementsComponentsState
                 bottom: widget.styles.sizeH(25),
               ),
               child: FormBuilderCheckboxList(
-                attribute: 'checkBox',
+                attribute: attribute,
                 initialValue: widget
                     .customRequirement.value, //pueden venir todos seleccionados
                 decoration: inputDecoration,
