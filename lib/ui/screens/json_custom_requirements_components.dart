@@ -252,10 +252,9 @@ class _JsonCustomRequirementsComponentsState
             label: widget.customRequirement.question,
             description: description,
             width: width,
-            heigth: height,
             styles: widget.styles,
-            decoration: inputDecoration,
             customRequirementId: attribute,
+            value: widget.customRequirement.value,
           ),
         );
         break;

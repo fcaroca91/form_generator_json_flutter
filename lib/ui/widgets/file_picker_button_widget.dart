@@ -12,21 +12,19 @@ class FilePickerButton extends StatefulWidget {
   final String label;
   final HomeStyles styles;
   final double width;
-  final double heigth;
-  final InputDecoration decoration;
   final String description;
   final String customRequirementId;
+  final String value;
 
-  const FilePickerButton({
-    Key key,
-    @required this.label,
-    @required this.styles,
-    @required this.width,
-    @required this.heigth,
-    @required this.decoration,
-    @required this.description,
-    @required this.customRequirementId,
-  }) : super(key: key);
+  const FilePickerButton(
+      {Key key,
+      @required this.label,
+      @required this.styles,
+      @required this.width,
+      @required this.description,
+      @required this.customRequirementId,
+      @required this.value})
+      : super(key: key);
 
   @override
   _FilePickerButtonState createState() => _FilePickerButtonState();
@@ -38,7 +36,8 @@ class _FilePickerButtonState extends State<FilePickerButton> {
 
   @override
   void initState() {
-    filePickerValue = TextEditingController(text: "Select File");
+    filePickerValue =
+        TextEditingController(text: widget.value ?? "Select File");
     super.initState();
   }
 
