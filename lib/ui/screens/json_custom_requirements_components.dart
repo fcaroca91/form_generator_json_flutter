@@ -85,13 +85,6 @@ class _JsonCustomRequirementsComponentsState
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
-              bottom: widget.styles.sizeH(7),
-              child: UrlLaunchHtml(
-                description: description,
-                styles: widget.styles,
-              ),
-            ),
             Container(
               width: width,
               height: height,
@@ -119,6 +112,13 @@ class _JsonCustomRequirementsComponentsState
                 keyboardType: TextInputType.text,
               ),
             ),
+            Positioned(
+              bottom: widget.styles.sizeH(7),
+              child: UrlLaunchHtml(
+                description: description,
+                styles: widget.styles,
+              ),
+            ),
             /* Positioned(
               top: widget.styles.sizeH(80),
               child: UrlLaunchHtml(
@@ -133,13 +133,6 @@ class _JsonCustomRequirementsComponentsState
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
-              bottom: widget.styles.sizeH(7),
-              child: UrlLaunchHtml(
-                description: description,
-                styles: widget.styles,
-              ),
-            ),
             Container(
               width: width,
               height: height,
@@ -158,6 +151,13 @@ class _JsonCustomRequirementsComponentsState
                 keyboardType: TextInputType.number,
               ),
             ),
+            Positioned(
+              bottom: widget.styles.sizeH(7),
+              child: UrlLaunchHtml(
+                description: description,
+                styles: widget.styles,
+              ),
+            ),
             /* Positioned(
               top: widget.styles.sizeH(68),
               child: UrlLaunchHtml(
@@ -172,13 +172,6 @@ class _JsonCustomRequirementsComponentsState
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
-              bottom: widget.styles.sizeH(7),
-              child: UrlLaunchHtml(
-                description: description,
-                styles: widget.styles,
-              ),
-            ),
             Container(
               width: width,
               height: height,
@@ -199,6 +192,13 @@ class _JsonCustomRequirementsComponentsState
                     .toList(),
               ),
             ),
+            Positioned(
+              bottom: widget.styles.sizeH(7),
+              child: UrlLaunchHtml(
+                description: description,
+                styles: widget.styles,
+              ),
+            ),
             /* Positioned(
               top: widget.styles.sizeH(68),
               child: UrlLaunchHtml(
@@ -213,13 +213,6 @@ class _JsonCustomRequirementsComponentsState
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
-              bottom: widget.styles.sizeH(0), //24
-              child: UrlLaunchHtml(
-                description: description,
-                styles: widget.styles,
-              ),
-            ),
             Container(
               width: width,
               margin: EdgeInsets.only(
@@ -243,6 +236,13 @@ class _JsonCustomRequirementsComponentsState
                 validators: [
                   FormBuilderValidators.required(),
                 ],
+              ),
+            ),
+            Positioned(
+              bottom: widget.styles.sizeH(0), //24
+              child: UrlLaunchHtml(
+                description: description,
+                styles: widget.styles,
               ),
             ),
           ],
